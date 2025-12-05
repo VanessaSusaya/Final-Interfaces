@@ -1,0 +1,53 @@
+<div class="cursos-container">
+  <div class="header">
+    <h2>Gestión de Cursos</h2>
+    <a routerLink="/cursos/nuevo" class="btn btn-primary">+ Nuevo Curso</a>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading" *ngIf="cargando">
+    <p>Cargando cursos...</p>
+  </div>
+
+  <div class="cursos-grid" *ngIf="!cargando && cursos.length > 0">
+    <div class="curso-card" *ngFor="let curso of cursos">
+      <div class="curso-header">
+        <h3>{{ curso.nombre }}</h3>
+        <div class="curso-status">
+          <span class="badge" [ngClass]="curso.activo ? 'badge-success' : 'badge-danger'">
+            {{ curso.activo ? 'Activo' : 'Inactivo' }}
+          </span>
+        </div>
+      </div>
+
+      <p class="descripcion">{{ curso.descripcion }}</p>
+
+      <div class="curso-stats">
+        <div class="stat">
+          <span class="label">Capacidad:</span>
+          <span class="value">{{ curso.capacidad }}</span>
+        </div>
+        <div class="stat">
+          <span class="label">Inscritos:</span>
+          <span class="value">{{ (curso.estudiantes_inscritos || curso.estudiantes?.length || 0) }}</span>
+        </div>
+        <div class="stat">
+          <span class="label">Disponible:</span>
+          <span class="value">{{ ((curso.capacidad || 30) - (curso.estudiantes_inscritos || curso.estudiantes?.length || 0)) }}</span>
+        </div>
+      </div>
+
+      <div class="curso-actions">
+        <a [routerLink]="['/cursos', curso.id]" class="btn btn-primary">Ver Detalles</a>
+        <button (click)="eliminarCurso(curso.id)" class="btn btn-danger">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!cargando && cursos.length === 0">
+    <p>No hay cursos registrados</p>
+  </div>
+</div>

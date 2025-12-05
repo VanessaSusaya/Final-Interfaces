@@ -1,0 +1,52 @@
+<div class="usuarios-container">
+  <div class="header">
+    <h2>Gestión de Usuarios</h2>
+    <a routerLink="/usuarios/nuevo" class="btn btn-primary">+ Nuevo Usuario</a>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading" *ngIf="cargando">
+    <p>Cargando usuarios...</p>
+  </div>
+
+  <div class="table-responsive" *ngIf="!cargando && usuarios.length > 0">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let usuario of usuarios">
+          <td>{{ usuario.nombre }}</td>
+          <td>{{ usuario.email }}</td>
+          <td>
+            <span class="badge" [ngClass]="'badge-' + usuario.rol">
+              {{ usuario.rol }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="usuario.activo ? 'badge-success' : 'badge-danger'">
+              {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td>
+            <a [routerLink]="['/usuarios', usuario.id]" class="btn btn-sm btn-primary">Editar</a>
+            <button (click)="eliminarUsuario(usuario.id)" class="btn btn-sm btn-danger">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" *ngIf="!cargando && usuarios.length === 0">
+    <p>No hay usuarios registrados</p>
+  </div>
+</div>

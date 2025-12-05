@@ -1,0 +1,39 @@
+<div class="reportes-container">
+  <div class="header">
+    <h2>Reportes</h2>
+    <div class="header-buttons">
+      <button (click)="generarReporteUsuarios()" class="btn btn-primary" [disabled]="cargando">
+        Generar Reporte de Usuarios
+      </button>
+      <button (click)="generarReporteCursos()" class="btn btn-primary" [disabled]="cargando">
+        Generar Reporte de Cursos
+      </button>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div class="loading" *ngIf="cargando">
+    <p>Generando reporte...</p>
+  </div>
+
+  <div class="reportes-list" *ngIf="reportes.length > 0">
+    <div class="reporte-item" *ngFor="let reporte of reportes">
+      <div class="reporte-info">
+        <h3>{{ reporte.titulo }}</h3>
+        <p class="tipo">Tipo: {{ reporte.tipo }}</p>
+        <p class="fecha">Generado: {{ reporte.fechaGeneracion | date: 'short' }}</p>
+        <p class="generado">Por: {{ reporte.generadoPor }}</p>
+      </div>
+      <div class="reporte-actions">
+        <button (click)="descargar(reporte.id)" class="btn btn-success">Descargar PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="reportes.length === 0 && !cargando">
+    <p>No hay reportes disponibles</p>
+  </div>
+</div>

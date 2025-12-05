@@ -1,0 +1,78 @@
+<div class="dashboard-container">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h1>Sistema de Gestión Educativa</h1>
+    </div>
+    <div class="navbar-menu">
+      <div class="navbar-user">
+        <span class="user-name" *ngIf="usuario">{{ usuario.nombre }}</span>
+        <span class="user-role" *ngIf="usuario">{{ usuario.rol }}</span>
+      </div>
+      <button class="btn btn-secondary" (click)="logout()">Cerrar Sesión</button>
+    </div>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <div class="dashboard-content">
+    <div class="container">
+      <h2>Bienvenido al Dashboard</h2>
+
+      <div class="dashboard-grid">
+        <!-- Panel Admin -->
+        <div class="card" *ngIf="esAdmin()">
+          <h3>Panel de Administrador</h3>
+          <p>Gestiona usuarios, cursos y visualiza reportes del sistema.</p>
+          <div class="card-links">
+            <a routerLink="/usuarios" class="btn btn-primary">Gestionar Usuarios</a>
+            <a routerLink="/cursos" class="btn btn-primary">Gestionar Cursos</a>
+            <a routerLink="/reportes" class="btn btn-primary">Ver Reportes</a>
+          </div>
+        </div>
+
+        <!-- Panel Profesor -->
+        <div class="card" *ngIf="esProfesor()">
+          <h3>Panel de Profesor</h3>
+          <p>Administra tus cursos y visualiza reportes de desempeño.</p>
+          <div class="card-links">
+            <a routerLink="/cursos" class="btn btn-primary">Mis Cursos</a>
+            <a routerLink="/reportes" class="btn btn-primary">Reportes</a>
+          </div>
+        </div>
+
+        <!-- Panel Estudiante -->
+        <div class="card" *ngIf="esEstudiante()">
+          <h3>Panel de Estudiante</h3>
+          <p>Visualiza tus cursos inscritos y tu progreso académico.</p>
+          <div class="card-links">
+            <a routerLink="/cursos" class="btn btn-primary">Mis Cursos</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información General -->
+      <div class="info-section mt-4">
+        <h3>Información de tu Cuenta</h3>
+        <div class="info-grid" *ngIf="usuario">
+          <div class="info-item">
+            <label>Nombre:</label>
+            <span>{{ usuario.nombre }}</span>
+          </div>
+          <div class="info-item">
+            <label>Email:</label>
+            <span>{{ usuario.email }}</span>
+          </div>
+          <div class="info-item">
+            <label>Rol:</label>
+            <span class="badge" [ngClass]="'badge-' + usuario.rol">{{ usuario.rol }}</span>
+          </div>
+          <div class="info-item">
+            <label>Estado:</label>
+            <span class="badge badge-success" *ngIf="usuario.activo">Activo</span>
+            <span class="badge badge-danger" *ngIf="!usuario.activo">Inactivo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
