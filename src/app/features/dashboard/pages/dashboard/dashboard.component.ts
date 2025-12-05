@@ -24,10 +24,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.authService.obtenerUsuarioActual()
+    this.authService.usuario$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(usuario => {
-        this.usuario = usuario;
+      .subscribe((usuario: Usuario | null ) => {
+        if (usuario) {
+          this.usuario = usuario;
+        }
       });
   }
 
