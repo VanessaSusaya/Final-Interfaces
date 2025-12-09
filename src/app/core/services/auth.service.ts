@@ -37,6 +37,26 @@ export class AuthService {
           estado: true,
           fechaCreacion: new Date(),
           fechaActualizacion: new Date()
+        },
+        {
+          id: '2',
+          email: 'profesor@educativa.com',
+          nombre: 'Juan',
+          apellido: 'Profesor',
+          rol: 'profesor',
+          estado: true,
+          fechaCreacion: new Date(),
+          fechaActualizacion: new Date()
+        },
+        {
+          id: '3',
+          email: 'estudiante@educativa.com',
+          nombre: 'María',
+          apellido: 'Estudiante',
+          rol: 'estudiante',
+          estado: true,
+          fechaCreacion: new Date(),
+          fechaActualizacion: new Date()
         }
       ];
 
