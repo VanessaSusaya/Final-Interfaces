@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UsuarioService } from '@core/services';
-import { Usuario } from '@core/models';
+import { UsuarioService } from '@core/services/usuario.service';
+import { Usuario } from '@core/models/usuario';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

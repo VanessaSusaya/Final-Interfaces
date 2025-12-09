@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { ListaUsuariosComponent } from './pages/lista-usuarios/lista-usuarios.component';
-import { DestalleUsuarioComponent } from './pages/detalle-usuario/detalle-usuario.component';
+import { DetalleUsuarioComponent } from './pages/detalle-usuario/detalle-usuario.component';
 
 export const USUARIOS_ROUTES: Routes = [
   {
@@ -8,11 +8,11 @@ export const USUARIOS_ROUTES: Routes = [
     component: ListaUsuariosComponent
   },
   {
-    path: 'nuevo',
-    component: DestalleUsuarioComponent
+    path: '.id',
+    component: DetalleUsuarioComponent
   },
   {
     path: ':id',
-    component: DestalleUsuarioComponent
+    component: DetalleUsuarioComponent
   }
 ];

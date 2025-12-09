@@ -1,0 +1,38 @@
+<div class="container">
+    <h2>Editar Usuario</h2>
+
+    <form [formGroup]="usuarioForm" (ngSubmit)="guardar()">
+        <div>
+            <label>Nombre:</label>
+            <input formControlName="nombre" />
+        </div>
+
+        <div>
+            <label>Apellido:</label>
+            <input formControlName="apellido" />
+        </div>
+
+        <div>
+            <label>Email:</label>
+            <input formControlName="email" type="email" />
+        </div>
+
+        <div>
+            <label>Rol:</label>
+            <select formControlName="rol">
+                <option value="admin">Admin</option>
+                <option value="profesor">Profesor</option>
+                <option value="estudiante">Estudiante</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Activo:</label>
+            <input type="checkbox" formControlName="estado" />
+        </div>
+    <div class="actions">
+        <button type="submit" [disabled]="usuarioForm.invalid">Guardar</button>
+        <button type="button" (click)="cancelar()">Cancelar</button>
+    </div>
+    </form>
+</div>
