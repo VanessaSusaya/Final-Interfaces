@@ -2,74 +2,196 @@
   <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-brand">
-      <h1>Sistema de Gestión Educativa</h1>
+      <h1>🎓 Sistema de Gestión Educativa</h1>
     </div>
     <div class="navbar-menu">
-      <div class="navbar-user">
-        <span class="user-name" *ngIf="usuario">{{ usuario.nombre }}</span>
-        <span class="user-role" *ngIf="usuario">{{ usuario.rol }}</span>
+      <div class="navbar-notifications">
+        <span class="notification-badge" *ngIf="notificacionesSinLeer > 0">
+          🔔 <span class="badge-count">{{ notificacionesSinLeer }}</span>
+        </span>
       </div>
-      <button class="btn btn-secondary" (click)="logout()">Cerrar Sesión</button>
+      <div class="navbar-user">
+        <span class="user-name" *ngIf="usuario">👤 {{ usuario.nombre }} {{ usuario.apellido }}</span>
+        <span class="user-role" *ngIf="usuario" [class.role-admin]="esAdmin()" [class.role-profesor]="esProfesor()" [class.role-estudiante]="esEstudiante()">
+          {{ usuario.rol | uppercase }}
+        </span>
+      </div>
+      <button class="btn btn-logout" (click)="logout()">🚪 Cerrar Sesión</button>
     </div>
   </nav>
 
   <!-- Contenido Principal -->
   <div class="dashboard-content">
     <div class="container">
-      <h2>Bienvenido al Dashboard</h2>
+      <!-- Header con bienvenida -->
+      <div class="welcome-header">
+        <h2>¡Bienvenido/a, {{ usuario?.nombre }}! 👋</h2>
+        <p class="subtitle">{{ esAdmin() ? 'Panel de Administración' : esProfesor() ? 'Panel de Profesor' : 'Panel de Estudiante' }}</p>
+      </div>
 
-      <div class="dashboard-grid">
-        <!-- Panel Admin -->
-        <div class="card" *ngIf="esAdmin()">
-          <h3>Panel de Administrador</h3>
-          <p>Gestiona usuarios, cursos y visualiza reportes del sistema.</p>
-          <div class="card-links">
-            <a routerLink="/usuarios" class="btn btn-primary">Gestionar Usuarios</a>
-            <a routerLink="/cursos" class="btn btn-primary">Gestionar Cursos</a>
-            <a routerLink="/reportes" class="btn btn-primary">Ver Reportes</a>
-          </div>
-        </div>
-
-        <!-- Panel Profesor -->
-        <div class="card" *ngIf="esProfesor()">
-          <h3>Panel de Profesor</h3>
-          <p>Administra tus cursos y visualiza reportes de desempeño.</p>
-          <div class="card-links">
-            <a routerLink="/cursos" class="btn btn-primary">Mis Cursos</a>
-            <a routerLink="/reportes" class="btn btn-primary">Reportes</a>
-          </div>
-        </div>
-
-        <!-- Panel Estudiante -->
-        <div class="card" *ngIf="esEstudiante()">
-          <h3>Panel de Estudiante</h3>
-          <p>Visualiza tus cursos inscritos y tu progreso académico.</p>
-          <div class="card-links">
-            <a routerLink="/cursos" class="btn btn-primary">Mis Cursos</a>
+      <!-- Estadísticas en Cards -->
+      <div class="stats-grid">
+        <div class="stat-card" *ngFor="let stat of estadisticas" [style.border-left-color]="stat.color">
+          <div class="stat-icon">{{ stat.icono }}</div>
+          <div class="stat-content">
+            <span class="stat-titulo">{{ stat.titulo }}</span>
+            <span class="stat-valor">{{ stat.valor }}</span>
+            <span class="stat-tendencia" *ngIf="stat.tendencia">{{ stat.tendencia }}</span>
           </div>
         </div>
       </div>
 
-      <!-- Información General -->
-      <div class="info-section mt-4">
-        <h3>Información de tu Cuenta</h3>
-        <div class="info-grid" *ngIf="usuario">
-          <div class="info-item">
-            <label>Nombre:</label>
-            <span>{{ usuario.nombre }}</span>
+      <div class="main-grid">
+        <!-- Columna Izquierda -->
+        <div class="left-column">
+          <!-- Notificaciones -->
+          <div class="card notifications-card">
+            <div class="card-header">
+              <h3>🔔 Notificaciones</h3>
+              <span class="badge-count" *ngIf="notificacionesSinLeer > 0">{{ notificacionesSinLeer }} nuevas</span>
+            </div>
+            <div class="notifications-list">
+              <div class="notification-item" 
+                   *ngFor="let notif of notificaciones.slice(0, 5)" 
+                   [class.unread]="!notif.leida"
+                   [class.notification-info]="notif.tipo === 'info'"
+                   [class.notification-warning]="notif.tipo === 'warning'"
+                   [class.notification-success]="notif.tipo === 'success'"
+                   [class.notification-error]="notif.tipo === 'error'"
+                   (click)="marcarNotificacionLeida(notif.id)">
+                <div class="notification-icon">{{ notif.tipo === 'warning' ? '⚠️' : notif.tipo === 'success' ? '✅' : notif.tipo === 'error' ? '❌' : 'ℹ️' }}</div>
+                <div class="notification-content">
+                  <strong>{{ notif.titulo }}</strong>
+                  <p>{{ notif.mensaje }}</p>
+                  <span class="notification-time">{{ getTiempoTranscurrido(notif.fecha) }}</span>
+                </div>
+              </div>
+              <div class="empty-state" *ngIf="notificaciones.length === 0">
+                <p>📭 No tienes notificaciones</p>
+              </div>
+            </div>
           </div>
-          <div class="info-item">
-            <label>Email:</label>
-            <span>{{ usuario.email }}</span>
+
+          <!-- Actividad Reciente -->
+          <div class="card activity-card">
+            <div class="card-header">
+              <h3>📊 Actividad Reciente</h3>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item" *ngFor="let actividad of actividadesRecientes.slice(0, 6)">
+                <div class="activity-timeline"></div>
+                <div class="activity-content">
+                  <p>{{ actividad.descripcion }}</p>
+                  <span class="activity-time">{{ getTiempoTranscurrido(actividad.fecha) }}</span>
+                </div>
+              </div>
+              <div class="empty-state" *ngIf="actividadesRecientes.length === 0">
+                <p>📝 No hay actividad reciente</p>
+              </div>
+            </div>
           </div>
-          <div class="info-item">
-            <label>Rol:</label>
-            <span class="badge" [ngClass]="'badge-' + usuario.rol">{{ usuario.rol }}</span>
+        </div>
+
+        <!-- Columna Derecha -->
+        <div class="right-column">
+          <!-- Cursos Activos / Accesos Rápidos -->
+          <div class="card quick-actions-card" *ngIf="esAdmin()">
+            <div class="card-header">
+              <h3>⚡ Accesos Rápidos</h3>
+            </div>
+            <div class="quick-actions-grid">
+              <a routerLink="/usuarios" class="quick-action-item">
+                <span class="action-icon">👥</span>
+                <span class="action-title">Usuarios</span>
+                <span class="action-subtitle">Gestionar</span>
+              </a>
+              <a routerLink="/cursos" class="quick-action-item">
+                <span class="action-icon">📚</span>
+                <span class="action-title">Cursos</span>
+                <span class="action-subtitle">Administrar</span>
+              </a>
+              <a routerLink="/reportes" class="quick-action-item">
+                <span class="action-icon">📈</span>
+                <span class="action-title">Reportes</span>
+                <span class="action-subtitle">Ver estadísticas</span>
+              </a>
+              <button class="quick-action-item" style="border: none; background: transparent; cursor: pointer;">
+                <span class="action-icon">⚙️</span>
+                <span class="action-title">Configuración</span>
+                <span class="action-subtitle">Sistema</span>
+              </button>
+            </div>
           </div>
-          <div class="info-item">
-            <label>Estado:</label>
-            <span class="badge badge-success" *ngIf="usuario.activo">Activo</span>
-            <span class="badge badge-danger" *ngIf="!usuario.activo">Inactivo</span>
+
+          <div class="card courses-card" *ngIf="esProfesor() || esEstudiante()">
+            <div class="card-header">
+              <h3>📚 {{ esProfesor() ? 'Mis Cursos' : 'Cursos Inscritos' }}</h3>
+              <a routerLink="/cursos" class="view-all-link">Ver todos →</a>
+            </div>
+            <div class="courses-list">
+              <div class="course-item" *ngFor="let curso of cursosActivos">
+                <div class="course-icon">📖</div>
+                <div class="course-info">
+                  <strong>{{ curso.nombre }}</strong>
+                  <p>{{ curso.descripcion }}</p>
+                  <div class="course-progress" *ngIf="esEstudiante()">
+                    <div class="progress-bar">
+                      <div class="progress-fill" [style.width]="curso.descripcion.includes('65%') ? '65%' : curso.descripcion.includes('80%') ? '80%' : '45%'"></div>
+                    </div>
+                  </div>
+                  <div class="course-students" *ngIf="esProfesor()">
+                    <span>👨‍🎓 {{ curso.descripcion }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gráfico de Actividad Semanal -->
+          <div class="card chart-card" *ngIf="esAdmin() || esProfesor()">
+            <div class="card-header">
+              <h3>📊 Actividad Semanal</h3>
+            </div>
+            <div class="chart-container">
+              <div class="bar-chart">
+                <div class="bar-item" *ngFor="let valor of actividadSemanal; let i = index">
+                  <div class="bar" [style.height.%]="(valor / 30) * 100">
+                    <span class="bar-value">{{ valor }}</span>
+                  </div>
+                  <span class="bar-label">{{ diasSemana[i] }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tareas Pendientes para Estudiantes -->
+          <div class="card tasks-card" *ngIf="esEstudiante()">
+            <div class="card-header">
+              <h3>📝 Próximas Entregas</h3>
+            </div>
+            <div class="tasks-list">
+              <div class="task-item">
+                <div class="task-checkbox">☐</div>
+                <div class="task-info">
+                  <strong>Componentes Reactivos</strong>
+                  <p>Angular Avanzado • Vence en 2 días</p>
+                </div>
+              </div>
+              <div class="task-item">
+                <div class="task-checkbox">☐</div>
+                <div class="task-info">
+                  <strong>Decoradores TypeScript</strong>
+                  <p>TypeScript Fundamentals • Vence en 5 días</p>
+                </div>
+              </div>
+              <div class="task-item completed">
+                <div class="task-checkbox">☑</div>
+                <div class="task-info">
+                  <strong>Operadores RxJS</strong>
+                  <p>RxJS Reactive • Completado</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

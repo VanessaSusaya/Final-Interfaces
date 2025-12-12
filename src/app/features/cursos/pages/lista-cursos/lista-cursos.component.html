@@ -1,7 +1,24 @@
 <div class="cursos-container">
+  <!-- Breadcrumb Navigation -->
+  <nav class="breadcrumb-nav">
+    <a routerLink="/dashboard" class="breadcrumb-link">
+      <span class="icon">🏠</span>
+      <span>Dashboard</span>
+    </a>
+    <span class="separator">›</span>
+    <span class="current">Gestión de Cursos</span>
+  </nav>
+
   <div class="header">
-    <h2>Gestión de Cursos</h2>
-    <a routerLink="/cursos/nuevo" class="btn btn-primary">+ Nuevo Curso</a>
+    <div class="header-left">
+      <button routerLink="/dashboard" class="btn-back" title="Volver al Dashboard">
+        <span class="back-icon">←</span>
+      </button>
+      <h2>📚 Gestión de Cursos</h2>
+    </div>
+    <a routerLink="/cursos/nuevo" class="btn btn-primary">
+      <span class="btn-icon">+</span> Nuevo Curso
+    </a>
   </div>
 
   <div class="alert alert-danger" *ngIf="error">

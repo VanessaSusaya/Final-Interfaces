@@ -1,12 +1,27 @@
 <div class="reportes-container">
+  <!-- Breadcrumb Navigation -->
+  <nav class="breadcrumb-nav">
+    <a routerLink="/dashboard" class="breadcrumb-link">
+      <span class="icon">🏠</span>
+      <span>Dashboard</span>
+    </a>
+    <span class="separator">›</span>
+    <span class="current">Reportes</span>
+  </nav>
+
   <div class="header">
-    <h2>Reportes</h2>
+    <div class="header-left">
+      <button routerLink="/dashboard" class="btn-back" title="Volver al Dashboard">
+        <span class="back-icon">←</span>
+      </button>
+      <h2>📊 Reportes</h2>
+    </div>
     <div class="header-buttons">
       <button (click)="generarReporteUsuarios()" class="btn btn-primary" [disabled]="cargando">
-        Generar Reporte de Usuarios
+        <span class="btn-icon">📄</span> Reporte de Usuarios
       </button>
       <button (click)="generarReporteCursos()" class="btn btn-primary" [disabled]="cargando">
-        Generar Reporte de Cursos
+        <span class="btn-icon">📚</span> Reporte de Cursos
       </button>
     </div>
   </div>
